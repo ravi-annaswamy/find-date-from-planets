@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>JyotishTools.com</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+
+    <style>
+        body {
+            max-width: 960px;
+            margin: auto;
+            background-color: lightgreen;
+            font-family: "Helvetica Neue", Arial, sans-serif;
+        }
+        .w3-container.w3-center {
+            text-align: center;
+            padding: 10px;
+        }
+        .w3-card-4 {
+            border: 1px solid #ccc;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.25);
+            margin-top: 20px;
+            background: #fff;
+        }
+        .w3-margin {
+            margin: 16px;
+        }
+
+        /* Grid layout for the horoscope ring */
+        .parent {
+            display: grid;
+            grid-template-columns: repeat(4, 90px);
+            grid-template-rows: repeat(4, 90px);
+            grid-column-gap: 5px;
+            grid-row-gap: 5px;
+            padding: 2px;
+        }
+        .div1 {
+            grid-area: 1 / 2 / 2 / 3;
+            border: 2px solid #000;
+            padding: 5px;
+            font-family: monospace;
+            font-size: large;
+        }
+        .div2 {
+            grid-area: 1 / 3 / 2 / 4;
+            border: 2px solid #000;
+            padding: 5px;
+            font-family: monospace;
+            font-size: large;
+        }
+        .div3 {
+            grid-area: 1 / 4 / 2 / 5;
+            border: 2px solid #000;
+            padding: 5px;
+            font-family: monospace;
+            font-size: large;
+        }
+        .div4 {
+            grid-area: 2 / 4 / 3 / 5;
+            border: 2px solid #000;
+            padding: 5px;
+            font-family: monospace;
+            font-size: large;
+        }
+        .div5 {
+            grid-area: 3 / 4 / 4 / 5;
+            border: 2px solid #000;
+            padding: 5px;
+            font-family: monospace;
+            font-size: large;
+        }
+        .div6 {
+            grid-area: 4 / 4 / 5 / 5;
+            border: 2px solid #000;
+            padding: 5px;
+            font-family: monospace;
+            font-size: large;
+        }
+        .div7 {
+            grid-area: 4 / 3 / 5 / 4;
+            border: 2px solid #000;
+            padding: 5px;
+            font-family: monospace;
+            font-size: large;
+        }
+        .div8 {
+            grid-area: 4 / 2 / 5 / 3;
+            border: 2px solid #000;
+            padding: 5px;
+            font-family: monospace;
+            font-size: large;
+        }
+        .div9 {
+            grid-area: 4 / 1 / 5 / 2;
+            border: 2px solid #000;
+            padding: 5px;
+            font-family: monospace;
+            font-size: large;
+        }
+        .div10 {
+            grid-area: 3 / 1 / 4 / 2;
+            border: 2px solid #000;
+            padding: 5px;
+            font-family: monospace;
+            font-size: large;
+        }
+        .div11 {
+            grid-area: 2 / 1 / 3 / 2;
+            border: 2px solid #000;
+            padding: 5px;
+            font-family: monospace;
+            font-size: large;
+        }
+        .div12 {
+            grid-area: 1 / 1 / 2 / 2;
+            border: 2px solid #000;
+            padding: 5px;
+            font-family: monospace;
+            font-size: large;
+        }
+
+        /* Modern palette styling */
+        .planet-palette-container {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            padding: 10px;
+        }
+        .palette-section {
+            background: #f7f7f7;
+            border-radius: 6px;
+            padding: 10px;
+            margin: 10px;
+            min-width: 150px;
+        }
+        .palette-section h3 {
+            margin-top: 0;
+            text-align: center;
+            font-weight: 600;
+        }
+        .palette-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        .palette-buttons button {
+            cursor: pointer;
+            background-color: #e0e0e0;
+            border: none;
+            border-radius: 4px;
+            padding: 8px;
+            transition: background-color 0.3s ease;
+            font-size: 1em;
+        }
+        .palette-buttons button:hover {
+            background-color: #d0d0d0;
+        }
+
+        /* Highlight for selected planet */
+        .palette-buttons button.selected-planet { 
+            background-color: #555555; /* darker gray */ 
+            color: #fff; 
+         }
+
+
+
+        /* Trash button styling */
+        .trash-button {
+            background: #ff6666;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            padding: 8px;
+            transition: background-color 0.3s ease;
+            margin: 10px;
+        }
+        .trash-button:hover {
+            background: #ff4d4d;
+        }
+        .trash-button img {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* Large search button styling */
+        .search-button {
+            background: #2196F3;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            padding: 10px 20px;
+            color: white;
+            font-size: 1em;
+            transition: background-color 0.3s ease;
+        }
+        .search-button:hover {
+            background: #1976D2;
+        }
+
+        #res {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="w3-container w3-center">
+        <h1 style="font-family: Calistoga, serif">Jyotish Tools</h1>
+        <h3 style="font-family: Calistoga, serif">JyotishTools</h3>
+        <h4 id="FindChart">Find the Date</h4>
+    </div>
+
+    <div class="w3-card-4 w3-margin w3-white">
+        <div style="padding:5px;">
+            <p>
+                To place a planet: click one of the planet buttons below (it will highlight), then click on a sign cell.
+                To remove a planet from the chart, click the trash can (it will highlight), then click any sign cell containing that planet.
+                Ketu is automatically placed opposite Rahu.
+            </p>
+
+            <!-- Optional: If you want the Mean Nodes checkbox, uncomment:
+            <input type="checkbox" id="nodechk">
+            <label for="nodechk">Use Mean Nodes</label>
+            -->
+
+            <!-- Planet Palettes -->
+            <div class="planet-palette-container" id="planetPalette">
+                <div class="palette-section">
+                    <h3>Year Markers</h3>
+                    <div class="palette-buttons">
+                        <!-- Jupiter = index 4, Saturn = index 6, Rahu = 7 -->
+                        <button data-planet="4">Jupiter</button>
+                        <button data-planet="6">Saturn</button>
+                        <button data-planet="7">Rahu</button>
+                    </div>
+                </div>
+                <div class="palette-section">
+                    <h3>Month Marker</h3>
+                    <div class="palette-buttons">
+                        <!-- Sun = index 0 -->
+                        <button data-planet="0">Sun</button>
+                    </div>
+                </div>
+                <div class="palette-section">
+                    <h3>Day Marker</h3>
+                    <div class="palette-buttons">
+                        <!-- Moon = index 1 -->
+                        <button data-planet="1">Moon</button>
+                    </div>
+                </div>
+                <div class="palette-section">
+                    <h3>Others</h3>
+                    <div class="palette-buttons">
+                        <!-- Mars = index 2, Mercury = index 3, Venus = index 5 -->
+                        <button data-planet="2">Mars</button>
+                        <button data-planet="3">Mercury</button>
+                        <button data-planet="5">Venus</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Trash / Remove button -->
+            <button class="trash-button" id="trashBtn">
+                <img src="trash.svg" alt="Remove Planet">
+            </button>
+
+            <!-- The 4x4 grid of 12 sign cells -->
+            <div class="parent">
+                <div class="div1" id="1" onclick="showSign('1')"></div>
+                <div class="div2" id="2" onclick="showSign('2')"></div>
+                <div class="div3" id="3" onclick="showSign('3')"></div>
+                <div class="div4" id="4" onclick="showSign('4')"></div>
+                <div class="div5" id="5" onclick="showSign('5')"></div>
+                <div class="div6" id="6" onclick="showSign('6')"></div>
+                <div class="div7" id="7" onclick="showSign('7')"></div>
+                <div class="div8" id="8" onclick="showSign('8')"></div>
+                <div class="div9" id="9" onclick="showSign('9')"></div>
+                <div class="div10" id="10" onclick="showSign('10')"></div>
+                <div class="div11" id="11" onclick="showSign('11')"></div>
+                <div class="div12" id="12" onclick="showSign('12')"></div>
+            </div>
+
+            <!-- Search button and result display -->
+            <div style="padding:20px;">
+                <button class="search-button" onclick="searchEphem()">Search</button>
+                <p id="res"></p>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- External scripts for planetary calculations -->
+    <script src="planterms.min.js"></script>
+    <script src="planets.min.js"></script>
+
+    <!-- Updated findchart.js logic -->
+    <script>
+    // zod[i] = Sign number (1..12) for each planet
+    // Index mapping: 0=Sun,1=Moon,2=Mars,3=Mercury,4=Jupiter,
+    //               5=Venus,6=Saturn,7=Rahu,8=Ketu
+    let zod = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+
+    // Which planet is active (or if we are in "remove planet" mode)
+    let activePlanetIndex = null;
+    let removeMode = false;
+
+    // Planet display names for the chart cells
+    const planetNames = ["Sun", "Moo", "Mar", "Mer", "Jup", "Ven", "Sat", "Rah", "Ket"];
+
+    // Activate a planet when a planet button is clicked
+    document.getElementById("planetPalette").addEventListener("click", function(e) {
+        if (e.target && e.target.dataset.planet) {
+            // Cancel remove mode
+            removeMode = false;
+            document.getElementById("trashBtn").classList.remove("selected-planet");
+
+            // Remove highlight from all planet buttons
+            const allButtons = document.querySelectorAll("#planetPalette button");
+            allButtons.forEach(btn => btn.classList.remove("selected-planet"));
+
+            // Highlight clicked button
+            e.target.classList.add("selected-planet");
+
+            // Set active planet
+            activePlanetIndex = parseInt(e.target.dataset.planet, 10);
+        }
+    });
+
+    // Toggle remove mode by clicking trash
+    document.getElementById("trashBtn").addEventListener("click", function() {
+        // De-select all planet buttons
+        const allButtons = document.querySelectorAll("#planetPalette button");
+        allButtons.forEach(btn => btn.classList.remove("selected-planet"));
+
+        removeMode = !removeMode;
+        if (removeMode) {
+            this.classList.add("selected-planet");
+            activePlanetIndex = null; // so we don't place a planet
+        } else {
+            this.classList.remove("selected-planet");
+        }
+    });
+
+    // When a sign cell is clicked
+    function showSign(sgn) {
+        const clickedSign = parseInt(sgn, 10);
+
+        // If remove mode is active, remove planet(s) in this sign
+        if (removeMode) {
+            removePlanetInSign(clickedSign);
+            return;
+        }
+
+        // Otherwise, place the currently active planet
+        if (activePlanetIndex === null) return; // no planet selected
+        zod[activePlanetIndex] = clickedSign;
+
+        // If planet is Rahu (index 7), place Ketu (index 8) 6 signs away
+        if (activePlanetIndex === 7) {
+            let k = clickedSign + 6;
+            if (k > 12) k -= 12;
+            if (k < 1) k += 12;
+            zod[8] = k;
+        }
+
+        // Update cells
+        refreshChart();
+    }
+
+    // Remove any planets occupying the given sign
+    function removePlanetInSign(signNum) {
+        for (let i = 0; i < zod.length; i++) {
+            if (zod[i] === signNum) {
+                zod[i] = 0;
+            }
+        }
+        refreshChart();
+    }
+
+    // Re-build the text in each of the 12 sign cells
+    function refreshChart() {
+        for (let i = 1; i <= 12; i++) {
+            document.getElementById(i).innerText = "";
+        }
+        let cnt = 0;
+        for (let i = 0; i < 12; i++) {
+            let s = "";
+            for (let j = 0; j < 9; j++) {
+                if (zod[j] === i + 1) {
+                    cnt++;
+                    s += planetNames[j] + "\t";
+                    if (cnt % 2 === 0) s += "\n";
+                }
+            }
+            document.getElementById(i+1).innerText = s;
+        }
+    }
+
+    function searchEphem() {
+        // Check if user has placed anything
+        let sumZod = 0;
+        for (let i = 0; i < zod.length; i++) {
+            sumZod += Number(zod[i]);
+        }
+        if (sumZod === 0) {
+            document.getElementById("res").innerHTML = "Please enter at least one planet";
+            return;
+        }
+
+        // If you have a checkbox for mean nodes, else default to false
+        let mn = document.getElementById("nodechk"); 
+        let useMeanNodes = mn ? mn.checked : false;
+
+        let jdStart = date2jul(1, 1, 1900);
+        let jdEnd = date2jul(1, 1, 2100);
+        let pp = new Array(10);
+        let results = "";
+
+        for (let jd = jdStart; jd <= jdEnd; jd++) {
+            transitPlanets(jd, pp, useMeanNodes); 
+            if (plCompare(zod, chPlanets(pp))) {
+                results += "Match: " + jd2date(jd) + "<br>";
+            }
+        }
+
+        if (results === "") results = "No Matches";
+        document.getElementById("res").innerHTML = results;
+    }
+
+    // Compare user-chosen sign arrangement (pos) with ephemeris sign arrangement (pp)
+    function plCompare(pos, pp) {
+        for (let i = 0; i < 9; i++) {
+            if (pos[i] === 0) continue;  // not placed by user
+            if (pp[i] !== pos[i]) return false;
+        }
+        return true;
+    }
+
+    // Convert planet longitudes in pp[] to sign numbers (1..12)
+    function chPlanets(p) {
+        let sg = new Array(9);
+        for (let i = 0; i < 9; i++) {
+            sg[i] = Math.floor(p[i] / 30) + 1; 
+        }
+        return sg;
+    }
+    </script>
+</body>
+</html>
